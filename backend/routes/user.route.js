@@ -13,9 +13,9 @@ userRouter.post("/todo/register", async (req, res) => {
   try {
     phone = payload.phone;
 
-    let userphone =await UserModel.findOne({ phone });
-    if (userphone) {
-      return res.status(401).send({ msg: "Phone!" });
+    let useremail =await UserModel.findOne({ email });
+    if (useremail) {
+      return res.status(401).send({ msg: "Email!" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -32,11 +32,11 @@ userRouter.post("/todo/register", async (req, res) => {
 });
 
 userRouter.post("/todo/login", async (req, res) => {
-  const { phone, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await UserModel.findOne({ phone });
+    const user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(401).send({ msg: "Wrong Phone!" });
+      return res.status(401).send({ msg: "Wrong Email!" });
     }
 
     const isPassword = await bcrypt.compare(password, user.password);
@@ -45,7 +45,7 @@ userRouter.post("/todo/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, phone: user.phone },
+      { id: user._id, email: user.email, username:user.username },
       "your_secret_key",
       { expiresIn: "1h" }
     );

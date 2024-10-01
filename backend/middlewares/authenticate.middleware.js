@@ -14,7 +14,8 @@ const token = req.headers['authorization'];
     }
 
     req.userId = decoded.id;
-    req.userPhone = decoded.phone;
+    username = decoded.username;
+    console.log("username",username, req.userId);
     next();
 });
 };
