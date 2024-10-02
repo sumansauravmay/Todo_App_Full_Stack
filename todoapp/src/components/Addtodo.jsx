@@ -20,7 +20,8 @@ const Addtodo = ({data2}) => {
       })
       .then((response) => {
         console.log("Task added:", response.data);
-        // getData();
+        setDescription("");
+        setTitle("");
         data2();
       })
       .catch((err) => {
