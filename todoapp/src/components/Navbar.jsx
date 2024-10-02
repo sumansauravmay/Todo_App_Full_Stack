@@ -1,8 +1,22 @@
 import React from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const Navbarcomp = () => {
+  const navigate=useNavigate();
   let username = JSON.parse(localStorage.getItem("username"));
+
+
+const handlelogin=()=>{
+if(username){
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  navigate("/");
+}else{
+  navigate("/login");
+}
+}
+
 
   return (
     <>
@@ -13,8 +27,8 @@ const Navbarcomp = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="/todo">TodoList</Nav.Link>
-              <Nav.Link href="/">{username ? "" : "Signup"}</Nav.Link>
-              <Nav.Link href="/login">{username ? username : "Login"}</Nav.Link>
+              <Nav.Link href="/">{username ? username : "Signup"}</Nav.Link>
+              <Nav.Link onClick={handlelogin}>{username ? "Logout" : "Login"}</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
