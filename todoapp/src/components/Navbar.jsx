@@ -16,8 +16,6 @@ if(username){
   navigate("/login");
 }
 }
-
-
   return (
     <>
       <Navbar bg="light" expand="lg">

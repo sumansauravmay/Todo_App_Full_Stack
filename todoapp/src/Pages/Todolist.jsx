@@ -7,6 +7,8 @@ const Todolist = () => {
   let [data, setData] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [filter, setFilter] = useState("All");
+
 
   let token = JSON.parse(localStorage.getItem("token"));
   console.log("tfetch", token);
@@ -92,6 +94,17 @@ const Todolist = () => {
     return <Login />;
   }
 
+  const filteredData = data.filter((todo) => {
+    if (filter === "Completed") {
+      return todo.status === true;
+    } else if (filter === "Not Completed") {
+      return todo.status === false;
+    } else {
+      return true; 
+    }
+  });
+
+
   return (
     <section className="vh-100">
       <div className="container py-5 h-100">
@@ -150,14 +163,17 @@ const Todolist = () => {
 
                 <div className="d-flex justify-content-end align-items-center mb-4 pt-2 pb-3">
                   <p className="small mb-0 me-2 text-muted">Filter</p>
-                  <select data-mdb-select-init>
-                    <option value="1">All</option>
-                    <option value="2">Completed</option>
-                    <option value="3">Not Completed</option>
+                  <select data-mdb-select-init
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  >
+                    <option value="All">All</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Not Completed">Not Completed</option>
                   </select>
                 </div>
 
-                {data?.map((todo) => (
+                {filteredData?.map((todo) => (
                   <div>
                     <TodoItem title={todo.title} description={todo.description} status={todo.status ? "Completed" : "Incomplete"} createdBy={todo.createdBy} handleDelete={()=>handleDelete(todo._id)} handleToggle={()=>handleToggle(todo._id)}/>
                   </div>
