@@ -47,25 +47,45 @@ const Todolist = () => {
       });
   };
 
+  const handleToggle = (id) => {
+    const headers = {
+      Authorization: token,
+      "Content-Type": "application/json",
+    };
 
-const handleDelete=(id)=>{
-  const headers = {
-    Authorization: token,
-    "Content-Type": "application/json",
+    axios
+      .patch(
+        `https://todo-app-full-stack-f52j.onrender.com/todo/update/${id}`,
+        {},
+        { headers }
+      )
+      .then((res) => {
+        console.log("status", res);
+        getData();
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   };
-  axios.delete(`https://todo-app-full-stack-f52j.onrender.com/todo/delete/${id}`, {headers})
-  .then((res)=>{
-    console.log(res.data);
-    getData();
-  })
-  .catch((err)=>{
-    console.log(err)
-  })
-}
 
-
-
-
+  const handleDelete = (id) => {
+    const headers = {
+      Authorization: token,
+      "Content-Type": "application/json",
+    };
+    axios
+      .delete(
+        `https://todo-app-full-stack-f52j.onrender.com/todo/delete/${id}`,
+        { headers }
+      )
+      .then((res) => {
+        console.log(res.data);
+        getData();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <section className="vh-100">
@@ -162,24 +182,23 @@ const handleDelete=(id)=>{
                       </p>
                     </li>
                     <li className="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
-
                       <div className="d-flex flex-row justify-content-end mb-1">
                         <button
                           className="text-info"
                           data-mdb-tooltip-init
                           title="Edit todo"
-                          
+                          onClick={() => handleToggle(todo._id)}
                         >
-                          Toggle<i className="fas fa-pencil-alt me-3"></i>
+                          Toggle
                         </button>
 
                         <button
                           className="text-danger"
                           data-mdb-tooltip-init
                           title="Delete todo"
-                          onClick={()=>handleDelete(todo._id)}
+                          onClick={() => handleDelete(todo._id)}
                         >
-                          Delete<i className="fas fa-trash-alt"></i>
+                          Delete
                         </button>
                       </div>
                     </li>
