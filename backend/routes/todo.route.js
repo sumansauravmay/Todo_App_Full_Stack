@@ -25,16 +25,32 @@ todoRouter.get("/todo/get", async (req, res) => {
 });
 
 todoRouter.patch("/todo/update/:id", async (req, res) => {
-  const payload = req.body;
   const ID = req.params.id;
   try {
-    await TodoModel.findByIdAndUpdate({ _id: ID }, payload);
-    res.status(200).send({ msg: "data is updated!" });
+    const todo = await TodoModel.findById(ID);
+    if (!todo) {
+      return res.status(404).send({ msg: "Todo not found" });
+    }
+    const updatedStatus = !todo.status;
+    await TodoModel.findByIdAndUpdate({ _id: ID }, { status: updatedStatus });
+    res.status(200).send({ msg: "Status updated!" });
   } catch (err) {
     console.log(err);
     res.status(500).send({ msg: "Error" });
   }
 });
+
+// todoRouter.patch("/todo/update/:id", async (req, res) => {
+//   const payload = req.body;
+//   const ID = req.params.id;
+//   try {
+//     await TodoModel.findByIdAndUpdate({ _id: ID }, payload);
+//     res.status(200).send({ msg: "data is updated!" });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send({ msg: "Error" });
+//   }
+// });
 
 todoRouter.delete("/todo/delete/:id", async (req, res) => {
   const ID = req.params.id;
