@@ -213,4 +213,4 @@ const Todolist = () => {
   );
 };
 
-export default Todolist;
+export default React.memo(Todolist);
