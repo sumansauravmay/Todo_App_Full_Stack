@@ -11,7 +11,7 @@ userRouter.post("/todo/register", async (req, res) => {
   const payload = req.body;
 
   try {
-    phone = payload.phone;
+    email = payload.email;
 
     let useremail =await UserModel.findOne({ email });
     if (useremail) {
