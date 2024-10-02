@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Login from "./Login";
+import TodoItem from "../components/TodoItem";
 
 const Todolist = () => {
   let [data, setData] = useState([]);
@@ -87,8 +88,8 @@ const Todolist = () => {
         console.log(err);
       });
   };
-  if(!token){
-    return <Login/>
+  if (!token) {
+    return <Login />;
   }
 
   return (
@@ -154,52 +155,12 @@ const Todolist = () => {
                     <option value="2">Completed</option>
                     <option value="3">Not Completed</option>
                   </select>
-                 
                 </div>
 
                 {data?.map((todo) => (
-                  <ul
-                    className="list-group list-group-horizontal rounded-0 bg-transparent"
-                    key={todo._id}
-                  >
-                    <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                      <p className="lead fw-normal mb-0">{todo.title}</p>
-                    </li>
-                    <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                      <p className="lead fw-normal mb-0">{todo.description}</p>
-                    </li>
-                    <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                      <p className="lead fw-normal mb-0">
-                        Status:{todo.status ? "Completed" : "Incomplete"}
-                      </p>
-                    </li>
-                    <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-                      <p className="lead fw-normal mb-0">
-                        createdby:{todo.createdBy}
-                      </p>
-                    </li>
-                    <li className="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
-                      <div className="d-flex flex-row justify-content-end mb-1">
-                        <button
-                          className="text-info"
-                          data-mdb-tooltip-init
-                          title="Edit todo"
-                          onClick={() => handleToggle(todo._id)}
-                        >
-                          Toggle
-                        </button>
-
-                        <button
-                          className="text-danger"
-                          data-mdb-tooltip-init
-                          title="Delete todo"
-                          onClick={() => handleDelete(todo._id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </li>
-                  </ul>
+                  <div>
+                    <TodoItem title={todo.title} description={todo.description} status={todo.status ? "Completed" : "Incomplete"} createdBy={todo.createdBy} handleDelete={()=>handleDelete(todo._id)} handleToggle={()=>handleToggle(todo._id)}/>
+                  </div>
                 ))}
               </div>
             </div>
