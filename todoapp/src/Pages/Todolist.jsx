@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Login from "./Login";
 
 const Todolist = () => {
   let [data, setData] = useState([]);
@@ -86,6 +87,9 @@ const Todolist = () => {
         console.log(err);
       });
   };
+  if(!token){
+    return <Login/>
+  }
 
   return (
     <section className="vh-100">
@@ -150,14 +154,7 @@ const Todolist = () => {
                     <option value="2">Completed</option>
                     <option value="3">Not Completed</option>
                   </select>
-                  <p className="small mb-0 ms-4 me-2 text-muted">Sort</p>
-                  <select data-mdb-select-init>
-                    <option value="1">Added date</option>
-                    <option value="2">Due date</option>
-                  </select>
-                  <a href="#!">
-                    <i className="fas fa-sort-amount-down-alt ms-2"></i>
-                  </a>
+                 
                 </div>
 
                 {data?.map((todo) => (

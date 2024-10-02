@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate=useNavigate();
   let [email, setEmail] = useState("");
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
@@ -14,6 +16,10 @@ const Signup = () => {
       .post(`https://todo-app-full-stack-f52j.onrender.com/todo/register`, data)
       .then((res) => {
         console.log("signup data", res.data.user);
+        navigate("/login");
+        setEmail("");
+        setUsername("");
+        setPassword("");
       })
       .catch((err) => console.log("err", err));
   };
