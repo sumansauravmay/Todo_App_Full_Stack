@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Todolist = () => {
   let [data, setData] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   let token = JSON.parse(localStorage.getItem("token"));
   console.log("tfetch", token);
@@ -11,7 +14,7 @@ const Todolist = () => {
     fetch(`https://todo-app-full-stack-f52j.onrender.com/todo/get`, { headers })
       .then((res) => res.json())
       .then((res) => {
-        console.log("task", res.msg);
+        // console.log("task", res.msg);
         setData(res.msg);
       })
       .catch((err) => {
@@ -21,6 +24,48 @@ const Todolist = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  const addNewTassk = () => {
+    const headers = {
+      Authorization: token,
+      "Content-Type": "application/json",
+    };
+    const task = { title, description };
+
+    axios
+      .post(`https://todo-app-full-stack-f52j.onrender.com/post/todo`, task, {
+        headers,
+      })
+      .then((response) => {
+        // console.log("Task added:", response.data);
+        setTitle("");
+        setDescription("");
+        getData();
+      })
+      .catch((err) => {
+        console.log("Error adding task:", err);
+      });
+  };
+
+
+const handleDelete=(id)=>{
+  const headers = {
+    Authorization: token,
+    "Content-Type": "application/json",
+  };
+  axios.delete(`https://todo-app-full-stack-f52j.onrender.com/todo/delete/${id}`, {headers})
+  .then((res)=>{
+    console.log(res.data);
+    getData();
+  })
+  .catch((err)=>{
+    console.log(err)
+  })
+}
+
+
+
+
 
   return (
     <section className="vh-100">
@@ -42,7 +87,20 @@ const Todolist = () => {
                           type="text"
                           className="form-control form-control-lg"
                           id="exampleFormControlInput1"
-                          placeholder="Add new..."
+                          placeholder="Add Title"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <a href="#!" data-mdb-tooltip-init title="Set due date">
+                          <i className="fas fa-calendar-alt fa-lg me-3"></i>
+                        </a>
+                        <input
+                          type="text"
+                          className="form-control form-control-lg"
+                          id="exampleFormControlInput1"
+                          placeholder="Add Description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
                         />
                         <a href="#!" data-mdb-tooltip-init title="Set due date">
                           <i className="fas fa-calendar-alt fa-lg me-3"></i>
@@ -53,6 +111,7 @@ const Todolist = () => {
                             data-mdb-button-init
                             data-mdb-ripple-init
                             className="btn btn-primary"
+                            onClick={addNewTassk}
                           >
                             Add
                           </button>
@@ -69,8 +128,7 @@ const Todolist = () => {
                   <select data-mdb-select-init>
                     <option value="1">All</option>
                     <option value="2">Completed</option>
-                    <option value="3">Active</option>
-                    <option value="4">Has due date</option>
+                    <option value="3">Not Completed</option>
                   </select>
                   <p className="small mb-0 ms-4 me-2 text-muted">Sort</p>
                   <select data-mdb-select-init>
@@ -82,7 +140,7 @@ const Todolist = () => {
                   </a>
                 </div>
 
-                {data.map((todo) => (
+                {data?.map((todo) => (
                   <ul
                     className="list-group list-group-horizontal rounded-0 bg-transparent"
                     key={todo._id}
@@ -95,7 +153,7 @@ const Todolist = () => {
                     </li>
                     <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
                       <p className="lead fw-normal mb-0">
-                        Status:{todo.status ? "completed" : "Not Completed"}
+                        Status:{todo.status ? "Completed" : "Incomplete"}
                       </p>
                     </li>
                     <li className="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
@@ -104,23 +162,25 @@ const Todolist = () => {
                       </p>
                     </li>
                     <li className="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+
                       <div className="d-flex flex-row justify-content-end mb-1">
-                        <a
-                          href="#!"
+                        <button
                           className="text-info"
                           data-mdb-tooltip-init
                           title="Edit todo"
+                          
                         >
-                          Edit<i className="fas fa-pencil-alt me-3"></i>
-                        </a>
-                        <a
-                          href="#!"
+                          Toggle<i className="fas fa-pencil-alt me-3"></i>
+                        </button>
+
+                        <button
                           className="text-danger"
                           data-mdb-tooltip-init
                           title="Delete todo"
+                          onClick={()=>handleDelete(todo._id)}
                         >
                           Delete<i className="fas fa-trash-alt"></i>
-                        </a>
+                        </button>
                       </div>
                     </li>
                   </ul>
