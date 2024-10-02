@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Login from "./Login";
 import TodoItem from "../components/TodoItem";
+import Addtodo from "../components/Addtodo";
 
 const Todolist = () => {
   let [data, setData] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [filter, setFilter] = useState("All");
-
 
   let token = JSON.parse(localStorage.getItem("token"));
   console.log("tfetch", token);
@@ -25,32 +23,17 @@ const Todolist = () => {
         console.log("err", err);
       });
   };
+
   useEffect(() => {
     getData();
   }, []);
 
-  const addNewTassk = () => {
-    const headers = {
-      Authorization: token,
-      "Content-Type": "application/json",
-    };
-    const task = { title, description };
 
-    axios
-      .post(`https://todo-app-full-stack-f52j.onrender.com/post/todo`, task, {
-        headers,
-      })
-      .then((response) => {
-        // console.log("Task added:", response.data);
-        setTitle("");
-        setDescription("");
-        getData();
-      })
-      .catch((err) => {
-        console.log("Error adding task:", err);
-      });
-  };
 
+  const handleData=()=>{
+    getData()
+  }
+ 
   const handleToggle = (id) => {
     const headers = {
       Authorization: token,
@@ -100,10 +83,9 @@ const Todolist = () => {
     } else if (filter === "Not Completed") {
       return todo.status === false;
     } else {
-      return true; 
+      return true;
     }
   });
-
 
   return (
     <section className="vh-100">
@@ -116,56 +98,16 @@ const Todolist = () => {
                   <i className="fas fa-check-square me-1"></i>
                   <u>Todo List</u>
                 </p>
-
-                <div className="pb-2">
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="d-flex flex-row align-items-center">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg"
-                          id="exampleFormControlInput1"
-                          placeholder="Add Title"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                        />
-                        <a href="#!" data-mdb-tooltip-init title="Set due date">
-                          <i className="fas fa-calendar-alt fa-lg me-3"></i>
-                        </a>
-                        <input
-                          type="text"
-                          className="form-control form-control-lg"
-                          id="exampleFormControlInput1"
-                          placeholder="Add Description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                        />
-                        <a href="#!" data-mdb-tooltip-init title="Set due date">
-                          <i className="fas fa-calendar-alt fa-lg me-3"></i>
-                        </a>
-                        <div>
-                          <button
-                            type="button"
-                            data-mdb-button-init
-                            data-mdb-ripple-init
-                            className="btn btn-primary"
-                            onClick={addNewTassk}
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
+                <Addtodo data2={handleData}/>
+                
                 <hr className="my-4" />
 
                 <div className="d-flex justify-content-end align-items-center mb-4 pt-2 pb-3">
                   <p className="small mb-0 me-2 text-muted">Filter</p>
-                  <select data-mdb-select-init
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
+                  <select
+                    data-mdb-select-init
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
                   >
                     <option value="All">All</option>
                     <option value="Completed">Completed</option>
@@ -174,8 +116,15 @@ const Todolist = () => {
                 </div>
 
                 {filteredData?.map((todo) => (
-                  <div>
-                    <TodoItem title={todo.title} description={todo.description} status={todo.status ? "Completed" : "Incomplete"} createdBy={todo.createdBy} handleDelete={()=>handleDelete(todo._id)} handleToggle={()=>handleToggle(todo._id)}/>
+                  <div key={todo._id}>
+                    <TodoItem
+                      title={todo.title}
+                      description={todo.description}
+                      status={todo.status ? "Completed" : "Incomplete"}
+                      createdBy={todo.createdBy}
+                      handleDelete={() => handleDelete(todo._id)}
+                      handleToggle={() => handleToggle(todo._id)}
+                    />
                   </div>
                 ))}
               </div>
